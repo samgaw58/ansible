@@ -1,6 +1,6 @@
 ---
 - hosts: servers
-become: yes
+become: true
 become_method: sudo
 tasks:
 - name: "Update cache & Full system update"

@@ -1,24 +1,15 @@
 ---
-- hosts: servers
-  gather_facts: yes
-  become: yes
+- name: Update and Upgrade Ubuntu Servers
+  hosts: your_server_group
+  become: yes   # This is used to escalate privileges (sudo)
 
   tasks:
-    - name: Perform a dist-upgrade.
-      ansible.builtin.apt:
-        upgrade: dist
+    - name: Update APT cache
+      apt:
         update_cache: yes
 
-    - name: Check if a reboot is required.
-      ansible.builtin.stat:
-        path: /var/run/reboot-required
-        get_md5: no
-      register: reboot_required_file
-
-    - name: Reboot the server (if required).
-      ansible.builtin.reboot:
-      when: reboot_required_file.stat.exists == true
-
-    - name: Remove dependencies that are no longer required.
-      ansible.builtin.apt:
-        autoremove: yes
+    - name: Upgrade packages
+      apt:
+        upgrade: yes
+        autoremove: yes   # Remove unnecessary packages
+        autoclean: yes    # Clean up package cache
